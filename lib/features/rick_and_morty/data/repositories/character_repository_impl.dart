@@ -16,8 +16,6 @@ class CharacterRepositoryImpl implements CharacterRepository {
     try {
       final Map<String, dynamic> response = await remoteDataSource
           .getCharacters(page);
-
-      // Extrai a lista de resultados e converte cada um para uma entidade.
       final List<Map<String, dynamic>> results =
           List<Map<String, dynamic>>.from(response['results']);
       final characters = results
