@@ -1,3 +1,4 @@
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/pages/character_list_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,11 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: CharacterListPage(),
     );
   }
 }
