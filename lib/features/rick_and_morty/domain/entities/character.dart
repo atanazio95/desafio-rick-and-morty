@@ -15,8 +15,6 @@ class Character {
     required this.species,
     required this.imageUrl,
   });
-
-  // Converte um Map (geralmente de JSON) para um objeto Character.
   factory Character.fromJson(Map<String, dynamic> json) {
     return Character(
       id: json['id'],
@@ -26,8 +24,6 @@ class Character {
       imageUrl: json['image'],
     );
   }
-
-  // Converte um objeto Character para um Map.
   Map<String, dynamic> toJson() {
     return {
       'id': id,

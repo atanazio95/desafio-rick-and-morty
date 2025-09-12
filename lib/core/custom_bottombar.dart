@@ -20,8 +20,8 @@ class CustomBottomBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: AppColors.accentColor,
-      unselectedItemColor: AppColors.inverseTextColor,
+      selectedItemColor: AppColors.inverseTextColor,
+      unselectedItemColor: AppColors.accentColor,
       onTap: onItemTapped,
     );
   }

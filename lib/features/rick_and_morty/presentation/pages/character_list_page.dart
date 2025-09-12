@@ -1,10 +1,11 @@
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/character_grid_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/character_providers.dart';
+import '../providers/view_mode_provider.dart';
 import '../widgets/character_card.dart';
 
-// CharacterListPage agora é um ConsumerWidget que recebe o ScrollController.
 class CharacterListPage extends ConsumerWidget {
   final ScrollController scrollController;
 
@@ -13,25 +14,42 @@ class CharacterListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Usamos o ref.watch para observar o estado do nosso provedor assíncrono.
+    // Assiste ao provedor de personagens para pegar os dados.
     final charactersAsyncValue = ref.watch(characterListProvider);
+    // Assiste ao provedor de visualização para alternar entre lista e grid.
+    final isGridView = ref.watch(isGridViewProvider);
 
     return charactersAsyncValue.when(
-      // Estado de carregamento: exibe um indicador de progresso no centro.
       loading: () => const Center(child: CircularProgressIndicator()),
-      // Estado de erro: exibe uma mensagem de erro.
       error: (error, stackTrace) =>
           Center(child: Text('Erro ao carregar os personagens: $error')),
-      // Estado de sucesso: exibe a lista de personagens.
       data: (characters) {
-        return ListView.builder(
-          controller: scrollController,
-          itemCount: characters.length,
-          itemBuilder: (context, index) {
-            final character = characters[index];
-            return CharacterCard(character: character);
-          },
-        );
+        if (isGridView) {
+          return GridView.builder(
+            controller: scrollController,
+            padding: const EdgeInsets.all(8.0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+              childAspectRatio: 0.7,
+            ),
+            itemCount: characters.length,
+            itemBuilder: (context, index) {
+              final character = characters[index];
+              return CharacterGridCard(character: character);
+            },
+          );
+        } else {
+          return ListView.builder(
+            controller: scrollController,
+            itemCount: characters.length,
+            itemBuilder: (context, index) {
+              final character = characters[index];
+              return CharacterCard(character: character);
+            },
+          );
+        }
       },
     );
   }

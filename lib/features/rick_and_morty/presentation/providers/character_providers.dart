@@ -6,12 +6,9 @@ import '../../data/repositories/character_repository_impl.dart';
 import '../../domain/repositories/character_repository.dart';
 import '../../domain/usecases/get_characters.dart';
 import '../../domain/entities/character.dart';
-import '../../../../core/error/failures.dart';
 
-// Provedor para o cliente HTTP (Dio). É a nossa dependência de baixo nível.
 final dioProvider = Provider<Dio>((ref) => Dio());
 
-// Provedor para o remote data source. Ele precisa do dioProvider.
 final characterRemoteDataSourceProvider = Provider<CharacterRemoteDataSource>((
   ref,
 ) {
@@ -19,20 +16,16 @@ final characterRemoteDataSourceProvider = Provider<CharacterRemoteDataSource>((
   return CharacterRemoteDataSourceImpl(dio: dio);
 });
 
-// Provedor para a implementação do repositório. Ele precisa do data source.
 final characterRepositoryProvider = Provider<CharacterRepository>((ref) {
   final remoteDataSource = ref.watch(characterRemoteDataSourceProvider);
   return CharacterRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
-// Provedor para o caso de uso. Ele precisa do repositório.
 final getCharactersUseCaseProvider = Provider<GetCharacters>((ref) {
   final repository = ref.watch(characterRepositoryProvider);
   return GetCharacters(repository);
 });
 
-// Notificador de estado para gerenciar a lista de personagens de forma paginada.
-// Ele mantém a lista, a página atual e o estado de carregamento.
 class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
   final GetCharacters getCharacters;
   int _currentPage = 1;
@@ -62,7 +55,6 @@ class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
 
     result.fold(
       (failure) {
-        // Lidar com o erro
         _isLoadingMore = false;
       },
       (newCharacters) {
@@ -81,7 +73,6 @@ class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
   }
 }
 
-// Provedor do notificador de estado.
 final characterListProvider =
     StateNotifierProvider<CharacterNotifier, AsyncValue<List<Character>>>((
       ref,

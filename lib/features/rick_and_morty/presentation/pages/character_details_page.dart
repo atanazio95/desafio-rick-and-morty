@@ -4,8 +4,6 @@ import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presenta
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// CharacterDetailsPage foi alterada de StatelessWidget para ConsumerWidget
-// para que possa acessar o provedor de favoritos do Riverpod.
 class CharacterDetailsPage extends ConsumerWidget {
   final Character character;
 
@@ -14,8 +12,6 @@ class CharacterDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Usamos o watch para saber se o personagem já está na lista de favoritos.
-    // Isso fará com que o widget seja reconstruído quando o estado mudar.
     final favorites = ref.watch(favoritesProvider);
     final isFavorite = favorites.any((fav) => fav.id == character.id);
 
@@ -26,12 +22,10 @@ class CharacterDetailsPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: Icon(
-              // Altera o ícone com base no estado do personagem.
               isFavorite ? Icons.favorite : Icons.favorite_border,
               color: isFavorite ? Colors.red : Colors.white,
             ),
             onPressed: () {
-              // Ações de adicionar ou remover favoritos.
               final favoritesNotifier = ref.read(favoritesProvider.notifier);
               if (isFavorite) {
                 favoritesNotifier.removeFavorite(character);

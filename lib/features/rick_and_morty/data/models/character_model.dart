@@ -25,7 +25,6 @@ class CharacterModel {
     );
   }
 
-  // Converte o modelo da API para a entidade de domínio.
   Character toEntity() {
     return Character(
       id: id,
