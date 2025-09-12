@@ -9,5 +9,5 @@ abstract class CharacterRepository {
   // O método getCharacters deve retornar um Future que contém
   // um Either, que pode ser uma Falha (Failure) em caso de erro,
   // ou uma lista de Personagens (List<Character>) em caso de sucesso.
-  Future<Either<Failure, List<Character>>> getCharacters();
+  Future<Either<Failure, List<Character>>> getCharacters(int page);
 }

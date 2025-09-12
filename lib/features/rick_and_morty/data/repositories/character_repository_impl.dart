@@ -12,13 +12,18 @@ class CharacterRepositoryImpl implements CharacterRepository {
   CharacterRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<Character>>> getCharacters() async {
+  Future<Either<Failure, List<Character>>> getCharacters(int page) async {
     try {
-      final List<Map<String, dynamic>> results = await remoteDataSource
-          .getCharacters();
+      final Map<String, dynamic> response = await remoteDataSource
+          .getCharacters(page);
+
+      // Extrai a lista de resultados e converte cada um para uma entidade.
+      final List<Map<String, dynamic>> results =
+          List<Map<String, dynamic>>.from(response['results']);
       final characters = results
           .map((json) => CharacterModel.fromJson(json).toEntity())
           .toList();
+
       return Right(characters);
     } on ServerFailure {
       return Left(ServerFailure());

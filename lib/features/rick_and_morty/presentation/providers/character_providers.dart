@@ -1,10 +1,12 @@
-import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/usecases/get_caracteres.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../../data/datasources/character_remote_datasource.dart';
 import '../../data/repositories/character_repository_impl.dart';
 import '../../domain/repositories/character_repository.dart';
+import '../../domain/usecases/get_characters.dart';
 import '../../domain/entities/character.dart';
+import '../../../../core/error/failures.dart';
 
 // Provedor para o cliente HTTP (Dio). É a nossa dependência de baixo nível.
 final dioProvider = Provider<Dio>((ref) => Dio());
@@ -29,12 +31,61 @@ final getCharactersUseCaseProvider = Provider<GetCharacters>((ref) {
   return GetCharacters(repository);
 });
 
-// Provedor assíncrono que busca a lista de personagens usando o caso de uso.
-// Este é o provedor que a UI irá "observar" para pegar os dados.
-final characterListProvider = FutureProvider<List<Character>>((ref) async {
-  final getCharacters = ref.watch(getCharactersUseCaseProvider);
-  final result = await getCharacters.call();
+// Notificador de estado para gerenciar a lista de personagens de forma paginada.
+// Ele mantém a lista, a página atual e o estado de carregamento.
+class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
+  final GetCharacters getCharacters;
+  int _currentPage = 1;
+  bool _isLoadingMore = false;
+  bool _hasMoreData = true;
 
-  // O Riverpod lida com o estado (loading, data, error)
-  return result.fold((failure) => throw failure, (characters) => characters);
-});
+  CharacterNotifier({required this.getCharacters})
+    : super(const AsyncValue.loading()) {
+    _fetchCharacters();
+  }
+
+  Future<void> _fetchCharacters() async {
+    state = const AsyncValue.loading();
+    final result = await getCharacters(_currentPage);
+    state = result.fold(
+      (failure) => AsyncValue.error(failure, StackTrace.current),
+      (characters) => AsyncValue.data(characters),
+    );
+  }
+
+  Future<void> loadMoreCharacters() async {
+    if (_isLoadingMore || !_hasMoreData) return;
+
+    _isLoadingMore = true;
+    _currentPage++;
+    final result = await getCharacters(_currentPage);
+
+    result.fold(
+      (failure) {
+        // Lidar com o erro
+        _isLoadingMore = false;
+      },
+      (newCharacters) {
+        if (newCharacters.isEmpty) {
+          _hasMoreData = false;
+        } else {
+          state.whenData((currentCharacters) {
+            state = AsyncValue.data(
+              List.from(currentCharacters)..addAll(newCharacters),
+            );
+          });
+        }
+        _isLoadingMore = false;
+      },
+    );
+  }
+}
+
+// Provedor do notificador de estado.
+final characterListProvider =
+    StateNotifierProvider<CharacterNotifier, AsyncValue<List<Character>>>((
+      ref,
+    ) {
+      final getCharacters = ref.watch(getCharactersUseCaseProvider);
+      return CharacterNotifier(getCharacters: getCharacters);
+    });
