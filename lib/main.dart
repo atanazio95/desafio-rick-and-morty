@@ -1,8 +1,9 @@
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/pages/character_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
