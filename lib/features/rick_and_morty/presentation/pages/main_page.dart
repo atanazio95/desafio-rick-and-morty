@@ -55,7 +55,6 @@ class _MainAppPageState extends ConsumerState<MainAppPage> {
       ),
       body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: CustomBottomBar(
-        type: BottomBarType.main,
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),

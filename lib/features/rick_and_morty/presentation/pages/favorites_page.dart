@@ -1,7 +1,7 @@
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/favorites_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/favorites_provider.dart';
 import '../widgets/character_card.dart';
 
 // FavoritesPage é um ConsumerWidget que "escuta" o favoritesProvider.

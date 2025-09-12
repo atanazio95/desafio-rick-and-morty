@@ -1,24 +1,52 @@
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/favorites_providers.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/entities/character.dart';
-
-class CharacterDetailsPage extends StatelessWidget {
+// CharacterDetailsPage foi alterada de StatelessWidget para ConsumerWidget
+// para que possa acessar o provedor de favoritos do Riverpod.
+class CharacterDetailsPage extends ConsumerWidget {
   final Character character;
 
   const CharacterDetailsPage({Key? key, required this.character})
     : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Usamos o watch para saber se o personagem já está na lista de favoritos.
+    // Isso fará com que o widget seja reconstruído quando o estado mudar.
+    final favorites = ref.watch(favoritesProvider);
+    final isFavorite = favorites.any((fav) => fav.id == character.id);
+
     return Scaffold(
-      appBar: CustomAppBar(title: "Details"),
+      appBar: CustomAppBar(
+        title: character.name,
+        isLeading: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              // Altera o ícone com base no estado do personagem.
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: isFavorite ? Colors.red : Colors.white,
+            ),
+            onPressed: () {
+              // Ações de adicionar ou remover favoritos.
+              final favoritesNotifier = ref.read(favoritesProvider.notifier);
+              if (isFavorite) {
+                favoritesNotifier.removeFavorite(character);
+              } else {
+                favoritesNotifier.addFavorite(character);
+              }
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Imagem do personagem com a animação Hero.
             Hero(
               tag: character.id,
               child: ClipRRect(
@@ -26,7 +54,6 @@ class CharacterDetailsPage extends StatelessWidget {
                 child: Image.network(
                   character.imageUrl,
                   fit: BoxFit.cover,
-                  // Placeholder para quando a imagem está carregando.
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Center(
@@ -44,14 +71,12 @@ class CharacterDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24.0),
-            // Nome do personagem
             Text(
               character.name,
               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16.0),
-            // Status do personagem
             _buildInfoRow(
               'Status',
               character.status,
@@ -61,7 +86,6 @@ class CharacterDetailsPage extends StatelessWidget {
                   ? Colors.red
                   : Colors.grey,
             ),
-            // Espécie do personagem
             _buildInfoRow('Espécie', character.species),
           ],
         ),
@@ -69,7 +93,6 @@ class CharacterDetailsPage extends StatelessWidget {
     );
   }
 
-  // Widget auxiliar para exibir informações em uma linha.
   Widget _buildInfoRow(String label, String value, {Color? color}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
