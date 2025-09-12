@@ -1,10 +1,12 @@
 import 'package:desafio_rick_and_morty_way_data/core/custom_bottombar.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/character_providers.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/view_mode_provider.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'character_list_page.dart';
 import 'favorites_page.dart';
-import '../providers/character_providers.dart';
 
 class MainAppPage extends ConsumerStatefulWidget {
   const MainAppPage({Key? key}) : super(key: key);
@@ -49,9 +51,19 @@ class _MainAppPageState extends ConsumerState<MainAppPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Assiste ao provedor para pegar o estado de visualização.
+    final isGridView = ref.watch(isGridViewProvider);
+
     return Scaffold(
       appBar: CustomAppBar(
         title: _selectedIndex == 0 ? 'Personagens' : 'Favoritos',
+        actions: [
+          IconButton(
+            icon: Icon(isGridView ? Icons.view_list : Icons.grid_view),
+            // Chama o método para alternar o estado de visualização.
+            onPressed: () => ref.read(isGridViewProvider.notifier).toggleView(),
+          ),
+        ],
       ),
       body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: CustomBottomBar(
