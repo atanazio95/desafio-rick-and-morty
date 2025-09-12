@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import '../../../../core/error/failures.dart';
 
 abstract class CharacterRemoteDataSource {
-  Future<List<Map<String, dynamic>>> getCharacters();
+  // O método agora retorna a resposta completa da API, incluindo
+  // as informações de paginação.
+  Future<Map<String, dynamic>> getCharacters(int page);
 }
 
 class CharacterRemoteDataSourceImpl implements CharacterRemoteDataSource {
@@ -11,21 +13,21 @@ class CharacterRemoteDataSourceImpl implements CharacterRemoteDataSource {
   CharacterRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<List<Map<String, dynamic>>> getCharacters() async {
+  Future<Map<String, dynamic>> getCharacters(int page) async {
     try {
+      // Constrói a URL com o número da página.
       final response = await dio.get(
-        'https://rickandmortyapi.com/api/character',
+        'https://rickandmortyapi.com/api/character?page=$page',
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> json = response.data;
-        return List<Map<String, dynamic>>.from(json['results']);
+        // Retorna a resposta completa, incluindo 'info' e 'results'.
+        return response.data;
       } else {
         throw ServerFailure();
       }
     } on DioException {
       // Dio lança DioException para erros de rede, timeout, etc.
-      // Aqui, tratamos como uma falha no servidor.
       throw ServerFailure();
     }
   }
