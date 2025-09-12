@@ -1,43 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/character_providers.dart';
+import '../widgets/character_card.dart';
 
-class CharacterListPage extends StatefulWidget {
-  const CharacterListPage({super.key});
-
-  @override
-  State<CharacterListPage> createState() => _CharacterListPageState();
-}
-
-class _CharacterListPageState extends State<CharacterListPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+// CharacterListPage é um ConsumerWidget para que possa "observar" os provedores do Riverpod.
+class CharacterListPage extends ConsumerWidget {
+  const CharacterListPage({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Usamos o ref.watch para observar o estado do nosso provedor assíncrono.
+    // O valor retornado (charactersAsyncValue) conterá o estado de loading, data ou error.
+    final charactersAsyncValue = ref.watch(characterListProvider);
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Rick and Morty characters',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.favorite, color: Colors.white),
-          ),
-        ],
+        title: const Text('Personagens de Rick and Morty'),
+        centerTitle: true,
+        backgroundColor: Colors.teal[700],
+      ),
+      body: charactersAsyncValue.when(
+        // Estado de carregamento: exibe um indicador de progresso no centro.
+        loading: () => const Center(child: CircularProgressIndicator()),
+        // Estado de erro: exibe uma mensagem de erro.
+        error: (error, stackTrace) =>
+            Center(child: Text('Erro ao carregar os personagens: $error')),
+        // Estado de sucesso: exibe a lista de personagens.
+        data: (characters) {
+          return ListView.builder(
+            itemCount: characters.length,
+            itemBuilder: (context, index) {
+              final character = characters[index];
+              // Para cada personagem na lista, cria um CharacterCard.
+              return CharacterCard(character: character);
+            },
+          );
+        },
       ),
     );
   }
