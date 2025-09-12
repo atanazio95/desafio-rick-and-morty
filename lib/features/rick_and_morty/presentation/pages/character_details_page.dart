@@ -1,3 +1,4 @@
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/character.dart';
@@ -11,10 +12,7 @@ class CharacterDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(character.name),
-        backgroundColor: Colors.teal[700],
-      ),
+      appBar: CustomAppBar(title: "Details"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
