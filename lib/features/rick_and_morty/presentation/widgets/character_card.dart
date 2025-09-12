@@ -1,3 +1,4 @@
+import 'package:desafio_rick_and_morty_way_data/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/character.dart';
@@ -87,10 +88,10 @@ class CharacterCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         color: character.status == 'Alive'
-                            ? Colors.green
+                            ? AppColors.statusAlive
                             : character.status == 'Dead'
-                            ? Colors.red
-                            : Colors.grey,
+                            ? AppColors.statusDead
+                            : AppColors.statusUnknown,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
