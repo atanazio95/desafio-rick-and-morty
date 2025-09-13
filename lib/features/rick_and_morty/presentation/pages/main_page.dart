@@ -56,7 +56,7 @@ class _MainAppPageState extends ConsumerState<MainAppPage> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: _selectedIndex == 0 ? 'Personagens' : 'Favoritos',
+        title: _selectedIndex == 0 ? 'Rick and Morty Characters' : 'Favoritos',
         actions: [
           IconButton(
             icon: Icon(isGridView ? Icons.view_list : Icons.grid_view),
