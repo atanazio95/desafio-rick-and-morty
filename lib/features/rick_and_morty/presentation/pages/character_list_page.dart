@@ -1,3 +1,4 @@
+import 'package:desafio_rick_and_morty_way_data/core/error/failures.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/character_providers.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/view_mode_provider.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/character_card.dart';
@@ -7,19 +8,51 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CharacterListPage extends ConsumerWidget {
   final ScrollController scrollController;
+  final bool hasInternet;
 
-  const CharacterListPage({Key? key, required this.scrollController})
-    : super(key: key);
+  const CharacterListPage({
+    Key? key,
+    required this.scrollController,
+    required this.hasInternet,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (!hasInternet) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Imagem de placeholder para substituir o ícone
+              Image.asset('lib/assets/rick_sad.png', width: 100, height: 100),
+              const SizedBox(height: 20),
+              const Text(
+                'Sem conexão com a internet',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Verifique sua conexão ou visualize seus personagens favoritos salvos localmente.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black54),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final charactersAsyncValue = ref.watch(characterListProvider);
     final isGridView = ref.watch(isGridViewProvider);
 
     return charactersAsyncValue.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stackTrace) =>
-          Center(child: Text('Erro ao carregar os personagens: $error')),
+      error: (error, stackTrace) {
+        return Center(child: Text('Erro ao carregar os personagens: $error'));
+      },
       data: (characters) {
         if (isGridView) {
           return GridView.builder(

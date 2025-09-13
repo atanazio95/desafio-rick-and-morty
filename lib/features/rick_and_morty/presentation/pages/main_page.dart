@@ -9,7 +9,9 @@ import 'character_list_page.dart';
 import 'favorites_page.dart';
 
 class MainAppPage extends ConsumerStatefulWidget {
-  const MainAppPage({Key? key}) : super(key: key);
+  final bool hasInternet;
+
+  const MainAppPage({Key? key, required this.hasInternet}) : super(key: key);
 
   @override
   ConsumerState<MainAppPage> createState() => _MainAppPageState();
@@ -24,7 +26,10 @@ class _MainAppPageState extends ConsumerState<MainAppPage> {
   void initState() {
     super.initState();
     _pages = [
-      CharacterListPage(scrollController: _scrollController),
+      CharacterListPage(
+        scrollController: _scrollController,
+        hasInternet: widget.hasInternet,
+      ),
       const FavoritesPage(),
     ];
     _scrollController.addListener(_onScroll);
