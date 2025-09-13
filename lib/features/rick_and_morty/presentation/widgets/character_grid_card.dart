@@ -4,7 +4,6 @@ import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presenta
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Este widget é um card otimizado para a visualização em grade.
 class CharacterGridCard extends ConsumerWidget {
   final Character character;
 
@@ -32,76 +31,72 @@ class CharacterGridCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Imagem do personagem com o botão de favorito.
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(10.0),
-                  ),
-                  child: Image.network(
-                    character.imageUrl,
-                    fit: BoxFit.cover,
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10.0),
+              ),
+              child: Image.network(
+                character.imageUrl,
+                fit: BoxFit.cover,
+                height: 150,
+                width: double.infinity,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return SizedBox(
                     height: 150,
-                    width: double.infinity,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return SizedBox(
-                        height: 150,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) =>
-                        const SizedBox(
-                          height: 150,
-                          child: Center(child: Icon(Icons.error)),
-                        ),
-                  ),
-                ),
-                // Botão de favorito no canto superior direito.
-                Positioned(
-                  top: 8.0,
-                  right: 8.0,
-                  child: IconButton(
-                    icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.red : Colors.white,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
                     ),
-                    onPressed: () {
-                      final favoritesNotifier = ref.read(
-                        favoritesProvider.notifier,
-                      );
-                      if (isFavorite) {
-                        favoritesNotifier.removeFavorite(character);
-                      } else {
-                        favoritesNotifier.addFavorite(character);
-                      }
-                    },
-                  ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => const SizedBox(
+                  height: 150,
+                  child: Center(child: Icon(Icons.error)),
                 ),
-              ],
+              ),
             ),
-            // Nome e status do personagem.
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    character.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          character.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorite ? Colors.red : Colors.grey,
+                        ),
+                        onPressed: () {
+                          final favoritesNotifier = ref.read(
+                            favoritesProvider.notifier,
+                          );
+                          if (isFavorite) {
+                            favoritesNotifier.removeFavorite(character);
+                          } else {
+                            favoritesNotifier.addFavorite(character);
+                          }
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 4.0),
                   Text(
