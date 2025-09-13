@@ -26,7 +26,7 @@ class CharacterListPage extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Imagem de placeholder para substituir o ícone
-              Image.asset('lib/assets/rick_sad.png', width: 100, height: 100),
+              Image.asset('assets/rick_sad.png', width: 100, height: 100),
               const SizedBox(height: 20),
               const Text(
                 'Sem conexão com a internet',
