@@ -65,17 +65,17 @@ class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
   }
 
   Future<void> _fetchCharacters() async {
-    // final connectivityResult = await Connectivity().checkConnectivity();
-    // if (connectivityResult.contains(ConnectivityResult.mobile) ||
-    //     connectivityResult.contains(ConnectivityResult.wifi)) {
-    //   final result = await getCharacters(_currentPage);
-    //   state = result.fold(
-    //     (failure) => AsyncValue.error(failure, StackTrace.current),
-    //     (characters) => AsyncValue.data(characters),
-    //   );
-    // } else {
-    state = AsyncValue.error(NetworkFailure(), StackTrace.current);
-    // }
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi)) {
+      final result = await getCharacters(_currentPage);
+      state = result.fold(
+        (failure) => AsyncValue.error(failure, StackTrace.current),
+        (characters) => AsyncValue.data(characters),
+      );
+    } else {
+      state = AsyncValue.error(NetworkFailure(), StackTrace.current);
+    }
   }
 
   Future<void> loadMoreCharacters() async {
