@@ -1,15 +1,15 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:desafio_rick_and_morty_way_data/core/error/failures.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/data/datasources/character_remote_datasource.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/data/repositories/character_repository_impl.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 
 import 'character_remote_datasource_test.mocks.dart';
 
-// Gerar um mock para a classe CharacterRemoteDataSource
 @GenerateMocks([CharacterRemoteDataSource])
 void main() {
   late CharacterRepositoryImpl repository;
@@ -60,48 +60,50 @@ void main() {
 
   group('getCharacters', () {
     test(
-        'deve retornar uma lista de Personagens quando a chamada for bem-sucedida',
-        () async {
-      // Configurar o mock para retornar dados JSON com sucesso.
-      when(mockRemoteDataSource.getCharacters(any))
-          .thenAnswer((_) async => tCharactersJson);
-
-      // Executar o método do repositório.
-      final result = await repository.getCharacters(1);
-
-      // Verificar se o resultado é uma lista de entidades.
-      expect(result, const Right(tCharactersList));
-      verify(mockRemoteDataSource.getCharacters(1)).called(1);
-      verifyNoMoreInteractions(mockRemoteDataSource);
-    });
+      'deve retornar uma lista de Personagens quando a chamada for bem-sucedida',
+      () async {
+        when(mockRemoteDataSource.getCharacters(any))
+            .thenAnswer((_) async => tCharactersJson);
+        final result = await repository.getCharacters(1);
+        result.fold(
+          (failure) =>
+              fail('Expected a Right but got a Left with failure: $failure'),
+          (characters) {
+            expect(listEquals(characters, tCharactersList), true);
+          },
+        );
+        verify(mockRemoteDataSource.getCharacters(1)).called(1);
+        verifyNoMoreInteractions(mockRemoteDataSource);
+      },
+    );
 
     test('deve retornar um ServerFailure quando a chamada for mal-sucedida',
         () async {
-      // Configurar o mock para lançar um ServerFailure.
       when(mockRemoteDataSource.getCharacters(any)).thenThrow(ServerFailure());
-
-      // Executar o método do repositório.
       final result = await repository.getCharacters(1);
-
-      // Verificar se o resultado é uma falha.
-      expect(result, Left(ServerFailure()));
+      expect(result, isA<Left>());
+      result.fold(
+        (failure) => expect(failure, isA<ServerFailure>()),
+        (characters) => fail('Expected a Left but got a Right'),
+      );
       verify(mockRemoteDataSource.getCharacters(1)).called(1);
       verifyNoMoreInteractions(mockRemoteDataSource);
     });
 
     test(
-        'deve retornar um NetworkFailure quando a chamada for mal-sucedida por falta de internet',
-        () async {
-      // Configurar o mock para lançar um NetworkFailure.
-      when(mockRemoteDataSource.getCharacters(any)).thenThrow(NetworkFailure());
-
-      // Executar o método do repositório.
-      final result = await repository.getCharacters(1);
-
-      // Verificar se o resultado é uma falha de rede.
-      expect(result, Left(NetworkFailure()));
-      verify(mockRemoteDataSource.getCharacters(1)).called(1);
-      verifyNoMoreInteractions(mockRemoteDataSource);
-    });
+      'deve retornar um NetworkFailure quando a chamada for mal-sucedida por falta de internet',
+      () async {
+        when(mockRemoteDataSource.getCharacters(any))
+            .thenThrow(NetworkFailure());
+        final result = await repository.getCharacters(1);
+        expect(result, isA<Left>());
+        result.fold(
+          (failure) => expect(failure, isA<NetworkFailure>()),
+          (characters) => fail('Expected a Left but got a Right'),
+        );
+        verify(mockRemoteDataSource.getCharacters(1)).called(1);
+        verifyNoMoreInteractions(mockRemoteDataSource);
+      },
+    );
   });
 }

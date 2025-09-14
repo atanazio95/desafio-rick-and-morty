@@ -18,6 +18,8 @@ dependencies:
   connectivity_plus: ^7.0.0
   mockito: ^5.5.0
   riverpod_test: ^0.1.9
+  collection: ^1.19.1
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:

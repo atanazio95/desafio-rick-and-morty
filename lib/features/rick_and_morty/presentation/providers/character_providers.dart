@@ -1,3 +1,5 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:desafio_rick_and_morty_way_data/core/error/failures.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/data/datasources/character_remote_datasource.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/data/repositories/character_repository_impl.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
@@ -63,17 +65,17 @@ class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
   }
 
   Future<void> _fetchCharacters() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
-      final result = await getCharacters(_currentPage);
-      state = result.fold(
-        (failure) => AsyncValue.error(failure, StackTrace.current),
-        (characters) => AsyncValue.data(characters),
-      );
-    } else {
-      state = AsyncValue.error(NetworkFailure(), StackTrace.current);
-    }
+    // final connectivityResult = await Connectivity().checkConnectivity();
+    // if (connectivityResult.contains(ConnectivityResult.mobile) ||
+    //     connectivityResult.contains(ConnectivityResult.wifi)) {
+    //   final result = await getCharacters(_currentPage);
+    //   state = result.fold(
+    //     (failure) => AsyncValue.error(failure, StackTrace.current),
+    //     (characters) => AsyncValue.data(characters),
+    //   );
+    // } else {
+    state = AsyncValue.error(NetworkFailure(), StackTrace.current);
+    // }
   }
 
   Future<void> loadMoreCharacters() async {
@@ -101,11 +103,3 @@ class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
     );
   }
 }
-
-final characterListProvider =
-    StateNotifierProvider<CharacterNotifier, AsyncValue<List<Character>>>((
-  ref,
-) {
-  final getCharacters = ref.watch(getCharactersUseCaseProvider);
-  return CharacterNotifier(getCharacters: getCharacters);
-});

@@ -15,6 +15,8 @@ class Character {
     required this.species,
     required this.imageUrl,
   });
+
+  // Converte um Map (geralmente de JSON) para um objeto Character.
   factory Character.fromJson(Map<String, dynamic> json) {
     return Character(
       id: json['id'],
@@ -24,6 +26,8 @@ class Character {
       imageUrl: json['image'],
     );
   }
+
+  // Converte um objeto Character para um Map.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -32,5 +36,26 @@ class Character {
       'species': species,
       'image': imageUrl,
     };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Character &&
+        other.id == id &&
+        other.name == name &&
+        other.status == status &&
+        other.species == species &&
+        other.imageUrl == imageUrl;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        status.hashCode ^
+        species.hashCode ^
+        imageUrl.hashCode;
   }
 }
