@@ -1,8 +1,7 @@
 import 'package:dartz/dartz.dart';
-
-import '../../../../core/error/failures.dart';
-import '../entities/character.dart';
-import '../repositories/character_repository.dart';
+import 'package:desafio_rick_and_morty_way_data/core/error/failures.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/repositories/character_repository.dart';
 
 class GetCharacters {
   final CharacterRepository repository;
@@ -11,5 +10,10 @@ class GetCharacters {
 
   Future<Either<Failure, List<Character>>> call(int page) async {
     return await repository.getCharacters(page);
+  }
+
+  // Novo método para a busca de personagens.
+  Future<Either<Failure, List<Character>>> searchCharacters(String name) async {
+    return await repository.searchCharacters(name);
   }
 }

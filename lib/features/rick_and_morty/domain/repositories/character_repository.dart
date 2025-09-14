@@ -4,4 +4,5 @@ import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/e
 
 abstract class CharacterRepository {
   Future<Either<Failure, List<Character>>> getCharacters(int page);
+  Future<Either<Failure, List<Character>>> searchCharacters(String name);
 }
