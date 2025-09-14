@@ -1,11 +1,10 @@
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/data/datasources/character_remote_datasource.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/data/repositories/character_repository_impl.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/repositories/character_repository.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/usecases/get_characters.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
-import '../../data/datasources/character_remote_datasource.dart';
-import '../../data/repositories/character_repository_impl.dart';
-import '../../domain/repositories/character_repository.dart';
-import '../../domain/usecases/get_characters.dart';
-import '../../domain/entities/character.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 
@@ -33,7 +32,7 @@ class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
   bool _hasMoreData = true;
 
   CharacterNotifier({required this.getCharacters})
-    : super(const AsyncValue.loading()) {
+      : super(const AsyncValue.loading()) {
     _fetchCharacters();
   }
 
@@ -75,8 +74,8 @@ class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
 
 final characterListProvider =
     StateNotifierProvider<CharacterNotifier, AsyncValue<List<Character>>>((
-      ref,
-    ) {
-      final getCharacters = ref.watch(getCharactersUseCaseProvider);
-      return CharacterNotifier(getCharacters: getCharacters);
-    });
+  ref,
+) {
+  final getCharacters = ref.watch(getCharactersUseCaseProvider);
+  return CharacterNotifier(getCharacters: getCharacters);
+});
