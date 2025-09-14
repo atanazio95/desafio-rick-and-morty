@@ -1,6 +1,3 @@
-Boa! 💯
-Aqui está o **README.md** atualizado, já com a seção de **Testes** incluída:
-
 ````markdown
 # Rick and Morty App
 
@@ -141,12 +138,16 @@ flutter test test/features/rick_and_morty/character_list_notifier_test.dart
 
 ---
 
+## 📌 Metodologia de Trabalho
+
+Durante o desenvolvimento, foi utilizada a metodologia **Scrum**, com organização e acompanhamento das tarefas através de um **quadro no Trello**:
+
+👉 [Quadro no Trello - Desafio Way Data](https://trello.com/b/ca279MDd/desafio-way-data)
+
+---
 
 ## 👨‍💻 Autor
 
 Desenvolvido por **[Jeorge Atanazio](https://github.com/atanazio95)** 🚀
 
-```
 
-Quer que eu também monte uma **badge de cobertura de testes** (com GitHub Actions + cobertura) para deixar seu README ainda mais profissional?
-```
