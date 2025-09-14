@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String _favoritesKey = 'favorites_characters';
@@ -23,9 +23,8 @@ class FavoritesNotifier extends StateNotifier<List<Character>> {
   Future<void> _saveFavorites() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final List<String> favoritesJson = state
-        .map((character) => jsonEncode(character.toJson()))
-        .toList();
+    final List<String> favoritesJson =
+        state.map((character) => jsonEncode(character.toJson())).toList();
     prefs.setStringList(_favoritesKey, favoritesJson);
   }
 
@@ -48,5 +47,5 @@ class FavoritesNotifier extends StateNotifier<List<Character>> {
 
 final favoritesProvider =
     StateNotifierProvider<FavoritesNotifier, List<Character>>((ref) {
-      return FavoritesNotifier();
-    });
+  return FavoritesNotifier();
+});
