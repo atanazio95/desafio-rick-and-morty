@@ -1,9 +1,9 @@
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/favorites_providers.dart';
+import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/view_mode_provider.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/character_card.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/character_grid_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/view_mode_provider.dart';
 
 class FavoritesPage extends ConsumerWidget {
   const FavoritesPage({Key? key}) : super(key: key);
