@@ -1,5 +1,4 @@
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
-import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/pages/character_details_page.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/favorites_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +8,17 @@ class CharacterCard extends ConsumerWidget {
 
   const CharacterCard({Key? key, required this.character}) : super(key: key);
 
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Alive':
+        return Colors.green;
+      case 'Dead':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favorites = ref.watch(favoritesProvider);
@@ -16,10 +26,9 @@ class CharacterCard extends ConsumerWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => CharacterDetailsPage(character: character),
-          ),
+        Navigator.of(context).pushNamed(
+          '/details',
+          arguments: character,
         );
       },
       child: Card(
@@ -78,11 +87,7 @@ class CharacterCard extends ConsumerWidget {
                       'Status: ${character.status}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: character.status == 'Alive'
-                            ? Colors.green
-                            : character.status == 'Dead'
-                                ? Colors.red
-                                : Colors.grey,
+                        color: _getStatusColor(character.status),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -95,8 +100,9 @@ class CharacterCard extends ConsumerWidget {
                   color: isFavorite ? Colors.red : null,
                 ),
                 onPressed: () {
-                  final favoritesNotifier =
-                      ref.read(favoritesProvider.notifier);
+                  final favoritesNotifier = ref.read(
+                    favoritesProvider.notifier,
+                  );
                   if (isFavorite) {
                     favoritesNotifier.removeFavorite(character);
                   } else {
