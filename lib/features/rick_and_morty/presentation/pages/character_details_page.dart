@@ -11,6 +11,17 @@ class CharacterDetailsPage extends ConsumerWidget {
   const CharacterDetailsPage({Key? key, required this.character})
       : super(key: key);
 
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Alive':
+        return AppColors.statusAlive;
+      case 'Dead':
+        return AppColors.statusDead;
+      default:
+        return AppColors.statusUnknown;
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favorites = ref.watch(favoritesProvider);
@@ -77,11 +88,7 @@ class CharacterDetailsPage extends ConsumerWidget {
             _buildInfoRow(
               'Status',
               character.status,
-              color: character.status == 'Alive'
-                  ? AppColors.statusAlive
-                  : character.status == 'Dead'
-                      ? AppColors.statusDead
-                      : AppColors.statusUnknown,
+              color: _getStatusColor(character.status),
             ),
             _buildInfoRow('Espécie', character.species),
           ],
