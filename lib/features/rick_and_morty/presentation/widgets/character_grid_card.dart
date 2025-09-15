@@ -8,26 +8,26 @@ class CharacterGridCard extends ConsumerWidget {
   final Character character;
 
   const CharacterGridCard({Key? key, required this.character})
-    : super(key: key);
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favorites = ref.watch(favoritesProvider);
     final isFavorite = favorites.any((fav) => fav.id == character.id);
 
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => CharacterDetailsPage(character: character),
-          ),
-        );
-      },
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CharacterDetailsPage(character: character),
+            ),
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -48,7 +48,7 @@ class CharacterGridCard extends ConsumerWidget {
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
+                                loadingProgress.expectedTotalBytes!
                             : null,
                       ),
                     ),
@@ -60,7 +60,6 @@ class CharacterGridCard extends ConsumerWidget {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -106,8 +105,8 @@ class CharacterGridCard extends ConsumerWidget {
                       color: character.status == 'Alive'
                           ? Colors.green
                           : character.status == 'Dead'
-                          ? Colors.red
-                          : Colors.grey,
+                              ? Colors.red
+                              : Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

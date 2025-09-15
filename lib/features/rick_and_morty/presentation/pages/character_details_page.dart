@@ -1,3 +1,4 @@
+import 'package:desafio_rick_and_morty_way_data/core/app_colors.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/entities/character.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/providers/favorites_providers.dart';
 import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/presentation/widgets/custom_appbar.dart';
@@ -8,7 +9,7 @@ class CharacterDetailsPage extends ConsumerWidget {
   final Character character;
 
   const CharacterDetailsPage({Key? key, required this.character})
-    : super(key: key);
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +24,9 @@ class CharacterDetailsPage extends ConsumerWidget {
           IconButton(
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.red : Colors.white,
+              color: isFavorite
+                  ? AppColors.statusDead
+                  : AppColors.inverseTextColor,
             ),
             onPressed: () {
               final favoritesNotifier = ref.read(favoritesProvider.notifier);
@@ -54,7 +57,7 @@ class CharacterDetailsPage extends ConsumerWidget {
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
+                                loadingProgress.expectedTotalBytes!
                             : null,
                       ),
                     );
@@ -75,10 +78,10 @@ class CharacterDetailsPage extends ConsumerWidget {
               'Status',
               character.status,
               color: character.status == 'Alive'
-                  ? Colors.green
+                  ? AppColors.statusAlive
                   : character.status == 'Dead'
-                  ? Colors.red
-                  : Colors.grey,
+                      ? AppColors.statusDead
+                      : AppColors.statusUnknown,
             ),
             _buildInfoRow('Espécie', character.species),
           ],
@@ -98,12 +101,12 @@ class CharacterDetailsPage extends ConsumerWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: AppColors.textColor,
             ),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 18, color: color ?? Colors.black54),
+            style: TextStyle(fontSize: 18, color: color ?? AppColors.textColor),
           ),
         ],
       ),

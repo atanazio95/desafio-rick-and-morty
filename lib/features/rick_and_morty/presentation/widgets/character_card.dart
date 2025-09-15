@@ -40,7 +40,6 @@ class CharacterCard extends ConsumerWidget {
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
-
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return SizedBox(
@@ -50,7 +49,7 @@ class CharacterCard extends ConsumerWidget {
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
                               ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
+                                  loadingProgress.expectedTotalBytes!
                               : null,
                         ),
                       ),
@@ -61,7 +60,6 @@ class CharacterCard extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 16.0),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +74,6 @@ class CharacterCard extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4.0),
-
                     Text(
                       'Status: ${character.status}',
                       style: TextStyle(
@@ -84,24 +81,22 @@ class CharacterCard extends ConsumerWidget {
                         color: character.status == 'Alive'
                             ? Colors.green
                             : character.status == 'Dead'
-                            ? Colors.red
-                            : Colors.grey,
+                                ? Colors.red
+                                : Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
               ),
-
               IconButton(
                 icon: Icon(
                   isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: isFavorite ? Colors.red : null,
                 ),
                 onPressed: () {
-                  final favoritesNotifier = ref.read(
-                    favoritesProvider.notifier,
-                  );
+                  final favoritesNotifier =
+                      ref.read(favoritesProvider.notifier);
                   if (isFavorite) {
                     favoritesNotifier.removeFavorite(character);
                   } else {
