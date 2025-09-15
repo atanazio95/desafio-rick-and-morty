@@ -47,7 +47,6 @@ class CharacterRemoteDataSourceImpl implements CharacterRemoteDataSource {
     String? gender,
   }) async {
     try {
-      // Começa a construir a URL com os parâmetros opcionais.
       final Map<String, dynamic> queryParameters = {
         'name': name,
         if (status != null && status.isNotEmpty) 'status': status,

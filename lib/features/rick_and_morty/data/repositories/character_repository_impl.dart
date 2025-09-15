@@ -16,7 +16,6 @@ class CharacterRepositoryImpl implements CharacterRepository {
       final Map<String, dynamic> response =
           await remoteDataSource.getCharacters(page);
 
-      // Extrai a lista de resultados e converte cada um para uma entidade.
       final List<Map<String, dynamic>> results =
           List<Map<String, dynamic>>.from(response['results']);
       final characters = results
@@ -25,10 +24,8 @@ class CharacterRepositoryImpl implements CharacterRepository {
 
       return Right(characters);
     } on NetworkFailure {
-      // Agora, o repositório sabe quando o erro é de rede.
       return Left(NetworkFailure());
     } on ServerFailure {
-      // Ou quando é um erro de servidor.
       return Left(ServerFailure());
     }
   }
@@ -39,7 +36,6 @@ class CharacterRepositoryImpl implements CharacterRepository {
       final Map<String, dynamic> response =
           await remoteDataSource.searchCharacters(name: name);
 
-      // Extrai a lista de resultados e converte cada um para uma entidade.
       final List<Map<String, dynamic>> results =
           List<Map<String, dynamic>>.from(response['results']);
       final characters = results
@@ -48,10 +44,8 @@ class CharacterRepositoryImpl implements CharacterRepository {
 
       return Right(characters);
     } on NetworkFailure {
-      // Agora, o repositório sabe quando o erro é de rede.
       return Left(NetworkFailure());
     } on ServerFailure {
-      // Ou quando é um erro de servidor.
       return Left(ServerFailure());
     }
   }

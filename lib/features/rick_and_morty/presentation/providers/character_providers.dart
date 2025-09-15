@@ -8,29 +8,24 @@ import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/u
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Provedor para o cliente HTTP (Dio).
 final dioProvider = Provider<Dio>((ref) => Dio());
 
-// Provedor para o remote data source.
 final characterRemoteDataSourceProvider =
     Provider<CharacterRemoteDataSource>((ref) {
   final dio = ref.watch(dioProvider);
   return CharacterRemoteDataSourceImpl(dio: dio);
 });
 
-// Provedor para a implementação do repositório.
 final characterRepositoryProvider = Provider<CharacterRepository>((ref) {
   final remoteDataSource = ref.watch(characterRemoteDataSourceProvider);
   return CharacterRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
-// Provedor para o caso de uso.
 final getCharactersUseCaseProvider = Provider<GetCharacters>((ref) {
   final repository = ref.watch(characterRepositoryProvider);
   return GetCharacters(repository);
 });
 
-// NOVO: Provedor para a busca de personagens.
 final characterSearchProvider = FutureProvider.autoDispose
     .family<List<Character>, String>((ref, query) async {
   if (query.isEmpty) {
@@ -52,7 +47,6 @@ final characterListProvider =
   return CharacterNotifier(getCharacters: getCharacters);
 });
 
-// Notificador de estado para gerenciar a lista de personagens de forma paginada.
 class CharacterNotifier extends StateNotifier<AsyncValue<List<Character>>> {
   final GetCharacters getCharacters;
   int _currentPage = 1;

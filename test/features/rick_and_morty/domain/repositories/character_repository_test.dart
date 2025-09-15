@@ -10,7 +10,6 @@ import 'package:desafio_rick_and_morty_way_data/features/rick_and_morty/domain/u
 
 import 'character_repository_test.mocks.dart';
 
-// Gerar um mock para a classe CharacterRepository
 @GenerateMocks([CharacterRepository])
 void main() {
   late GetCharacters usecase;

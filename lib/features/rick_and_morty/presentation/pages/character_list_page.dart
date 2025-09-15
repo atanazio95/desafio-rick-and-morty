@@ -50,7 +50,6 @@ class CharacterListPage extends ConsumerWidget {
 
     return Column(
       children: [
-        // Campo de busca e botão de alternância
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
@@ -80,7 +79,6 @@ class CharacterListPage extends ConsumerWidget {
             ],
           ),
         ),
-        // Lista de personagens
         Expanded(
           child: charactersAsyncValue.when(
             loading: () => const Center(child: CircularProgressIndicator()),

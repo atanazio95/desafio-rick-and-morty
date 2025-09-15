@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Classe que representa o estado da busca.
 class SearchQuery {
   final String? name;
   final String? status;
@@ -12,7 +11,6 @@ class SearchQuery {
     this.species,
   });
 
-  // Cria uma nova instância com os campos atualizados.
   SearchQuery copyWith({
     String? name,
     String? status,
@@ -26,21 +24,17 @@ class SearchQuery {
   }
 }
 
-// Notificador de estado para gerenciar o texto de busca e os filtros.
 class SearchNotifier extends StateNotifier<SearchQuery> {
   SearchNotifier() : super(SearchQuery());
 
-  // Altera o texto de busca.
   void setSearchQuery(String query) {
     state = state.copyWith(name: query);
   }
 
-  // Altera o status do filtro.
   void setStatus(String? status) {
     state = state.copyWith(status: status);
   }
 
-  // Altera a espécie do filtro.
   void setSpecies(String? species) {
     state = state.copyWith(species: species);
   }

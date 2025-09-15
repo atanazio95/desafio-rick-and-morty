@@ -12,7 +12,6 @@ class GetCharacters {
     return await repository.getCharacters(page);
   }
 
-  // Novo método para a busca de personagens.
   Future<Either<Failure, List<Character>>> searchCharacters(String name) async {
     return await repository.searchCharacters(name);
   }

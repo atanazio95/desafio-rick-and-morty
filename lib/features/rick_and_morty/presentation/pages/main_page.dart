@@ -56,7 +56,6 @@ class _MainAppPageState extends ConsumerState<MainAppPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Assiste ao provedor para pegar o estado de visualização.
     final isGridView = ref.watch(isGridViewProvider);
 
     return Scaffold(
@@ -65,7 +64,6 @@ class _MainAppPageState extends ConsumerState<MainAppPage> {
         actions: [
           IconButton(
             icon: Icon(isGridView ? Icons.view_list : Icons.grid_view),
-            // Chama o método para alternar o estado de visualização.
             onPressed: () => ref.read(isGridViewProvider.notifier).toggleView(),
           ),
         ],
